@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medanta – Attendant e-Pass</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #c0392b;
+      --red-dk: #a93226;
+      --gray:   #6c757d;
+      --light:  #f4f4f4;
+      --border: #ddd;
+      --white:  #fff;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--light);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Inline SVG cross logo */
+    .logo-cross {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-text .brand {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #555;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .logo-text .sub {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--red);
+    }
+
+    /* ── Photo section ── */
+    .photo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 18px 16px;
+    }
+
+    .avatar-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #ccc;
+      border: 3px solid var(--border);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      font-size: 48px;
+      color: #aaa;
+      user-select: none;
+    }
+
+    .btn-capture {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 24px;
+      padding: 10px 40px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      letter-spacing: .5px;
+    }
+
+    .btn-capture:hover { background: var(--red-dk); }
+
+    /* ── Form fields ── */
+    .form-section {
+      padding: 0 18px 12px;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .field-label span { color: var(--red); }
+
+    .field-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #4a90d9;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #333;
+      outline: none;
+      transition: border-color .2s;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .field-input:focus { border-color: #1a6bbf; }
+    .field-input::placeholder { color: #bbb; }
+
+    .field-input.normal { border-color: var(--border); }
+    .field-input.normal:focus { border-color: #4a90d9; }
+
+    /* ── Patient details ── */
+    .details-section {
+      padding: 6px 18px 18px;
+    }
+
+    .detail-row {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 5px;
+      line-height: 1.55;
+    }
+
+    .detail-row strong { font-weight: 600; }
+
+    /* ── Table ── */
+    .table-section {
+      margin: 0 18px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      background: var(--red);
+      color: var(--white);
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    .table-cols {
+      display: grid;
+      grid-template-columns: 1fr 80px 90px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .col-head {
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1fr 80px 90px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .table-row:last-child { border-bottom: none; }
+
+    .cell {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 0;
+    }
+
+    .badge.active   { color: #27ae60; }
+    .badge.inactive { color: #888; }
+
+    .btn-remove {
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 3px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-remove:hover { background: var(--red-dk); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-wrap">
+      <!-- Medanta cross icon (SVG recreation) -->
+      <svg class="logo-cross" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- grey horizontal lines (left arm) -->
+        <line x1="2"  y1="14" x2="15" y2="14" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="16" x2="15" y2="16" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="18" x2="15" y2="18" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="20" x2="15" y2="20" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="22" x2="15" y2="22" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="24" x2="15" y2="24" stroke="#999" stroke-width="1.2"/>
+        <line x1="2"  y1="26" x2="15" y2="26" stroke="#999" stroke-width="1.2"/>
+        <!-- grey vertical lines (bottom arm) -->
+        <line x1="14" y1="25" x2="14" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="16" y1="25" x2="16" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="18" y1="25" x2="18" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="20" y1="25" x2="20" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="22" y1="25" x2="22" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="24" y1="25" x2="24" y2="38" stroke="#999" stroke-width="1.2"/>
+        <line x1="26" y1="25" x2="26" y2="38" stroke="#999" stroke-width="1.2"/>
+        <!-- red vertical lines (top arm) with rounded top -->
+        <path d="M14 2 Q14 2 14 2 L14 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M16 2 L16 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M18 2 L18 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M20 2 L20 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M22 2 L22 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M24 2 L24 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M26 2 L26 20" stroke="#c0392b" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- red horizontal lines (right arm) -->
+        <line x1="15" y1="14" x2="38" y2="14" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="16" x2="38" y2="16" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="18" x2="38" y2="18" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="20" x2="38" y2="20" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="22" x2="38" y2="22" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="24" x2="38" y2="24" stroke="#c0392b" stroke-width="1.2"/>
+        <line x1="15" y1="26" x2="38" y2="26" stroke="#c0392b" stroke-width="1.2"/>
+      </svg>
+      <div class="logo-text">
+        <span class="brand">Medanta</span>
+        <span class="sub">The Medicity</span>
+      </div>
+    </div>
+    <span class="header-title">Attendant e-pass</span>
+  </div>
+
+  <!-- Photo capture -->
+  <div class="photo-section">
+    <div class="avatar-ring" id="avatarRing">
+      <span class="avatar-placeholder" id="avatarPlaceholder">👤</span>
+      <video id="cameraFeed" style="display:none;width:100%;height:100%;object-fit:cover;" autoplay playsinline></video>
+      <canvas id="snapCanvas" style="display:none;"></canvas>
+      <img id="capturedImg" style="display:none;width:100%;height:100%;object-fit:cover;" alt="Captured" />
+    </div>
+    <button class="btn-capture" id="captureBtn" onclick="handleCapture()">Capture</button>
+  </div>
+
+  <!-- Form -->
+  <div class="form-section">
+    <div class="field-group">
+      <div class="field-label">Enter Mobile Number<span>*</span></div>
+      <input class="field-input" type="tel" placeholder="Mobile Number" maxlength="10" />
+    </div>
+    <div class="field-group">
+      <div class="field-label">Enter Name<span>*</span></div>
+      <input class="field-input normal" type="text" placeholder="Visitor name" />
+    </div>
+  </div>
+
+  <!-- Patient details -->
+  <div class="details-section">
+    <div class="detail-row"><strong>UHID No :</strong> MM03238972</div>
+    <div class="detail-row"><strong>Patient Name :</strong> Mr. Krishna Gopal Jaiswal</div>
+    <div class="detail-row"><strong>Pass Type :</strong> Attendant</div>
+    <div class="detail-row"><strong>Room Number :</strong> ICU 11</div>
+    <div class="detail-row"><strong>Area :</strong> 9th Floor B2B3</div>
+    <div class="detail-row"><strong>Doctor Name :</strong> NARESH</div>
+    <div class="detail-row"><strong>Child Permission :</strong> NO</div>
+    <div class="detail-row"><strong>Food Permission :</strong> NO</div>
+    <div class="detail-row"><strong>Number of person allowed :</strong> 1</div>
+    <div class="detail-row"><strong>Visit Time From:</strong> || 11:50 – 12:15</div>
+  </div>
+
+  <!-- Attendant registration table -->
+  <div class="table-section">
+    <div class="table-header">Attendant Registration Details</div>
+    <div class="table-cols">
+      <div class="col-head">Name</div>
+      <div class="col-head">Status</div>
+      <div class="col-head">Remove</div>
+    </div>
+    <div class="table-row">
+      <div class="cell">Akshat</div>
+      <div class="cell"><span class="badge active">Active</span></div>
+      <div class="cell"><button class="btn-remove" onclick="removeRow(this)">Remove</button></div>
+    </div>
+    <div class="table-row">
+      <div class="cell">Vivansh</div>
+      <div class="cell"><span class="badge inactive">Inactive</span></div>
+      <div class="cell"><button class="btn-remove" onclick="removeRow(this)">Remove</button></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let streaming = false;
+
+  async function handleCapture() {
+    const btn = document.getElementById('captureBtn');
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.getElementById('snapCanvas');
+    const img = document.getElementById('capturedImg');
+    const placeholder = document.getElementById('avatarPlaceholder');
+
+    if (!streaming) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        placeholder.style.display = 'none';
+        img.style.display = 'none';
+        streaming = true;
+        btn.textContent = 'Snap';
+      } catch (e) {
+        alert('Camera access denied or unavailable.');
+      }
+    } else {
+      // Take snapshot
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      img.src = canvas.toDataURL('image/jpeg');
+      img.style.display = 'block';
+      video.style.display = 'none';
+      // Stop stream
+      video.srcObject.getTracks().forEach(t => t.stop());
+      video.srcObject = null;
+      streaming = false;
+      btn.textContent = 'Retake';
+    }
+  }
+
+  function removeRow(btn) {
+    const row = btn.closest('.table-row');
+    if (confirm('Remove this attendant?')) row.remove();
+  }
+</script>
+</body>
+</html>
